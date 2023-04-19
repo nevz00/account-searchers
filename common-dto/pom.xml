@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.maib</groupId>
+        <artifactId>account-searcher</artifactId>
+        <version>master-SNAPSHOT</version>
+    </parent>
+    <artifactId>common-dto</artifactId>
+
+    <properties>
+        <spring-boot.repackage.skip>true</spring-boot.repackage.skip>
+        <swagger.spec1>${project.basedir}/src/main/resources/openapi/account_protocol.yaml</swagger.spec1>
+        <swagger.generated.package.prefix>com.maib.account.ws</swagger.generated.package.prefix>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <scope>provided</scope>
+            <version>2.2.8</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <scope>provided</scope>
+            <version>2.0.0.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <scope>provided</scope>
+            <version>2.14.2</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <scope>provided</scope>
+            <version>1.3.2</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <debug>${debug.mode}</debug>
+                    <optimize>true</optimize>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>io.swagger.codegen.v3</groupId>
+                <artifactId>swagger-codegen-maven-plugin</artifactId>
+                <version>3.0.42</version>
+                <executions>
+                    <execution>
+                        <id>execution-account</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${swagger.spec1}</inputSpec>
+                            <language>java</language>
+                            <!-- Directory with generated classes -->
+                            <output>target/generated-sources</output>
+                            <library>feign</library>
+                            <!-- Classes generated package -->
+                            <modelPackage>${swagger.generated.package.prefix}.model</modelPackage>
+                            <configOptions>
+                                <!-- Annotations for bean validation -->
+                                <useBeanValidation>true</useBeanValidation>
+                                <!-- Generate not in project structure -->
+                                <sourceFolder>swagger-codegen</sourceFolder>
+                                <!--Generate date in format java8 -->
+                                <dateLibrary>java8</dateLibrary>
+                            </configOptions>
+                            <additionalProperties>
+                                <lombok>true</lombok>
+                                <lombokArgsConstructor>true</lombokArgsConstructor> <!-- Add this line -->
+                            </additionalProperties>
+                            <generateModelTests>false</generateModelTests>
+                            <generateApis>false</generateApis>
+                            <generateSupportingFiles>false</generateSupportingFiles>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -1,0 +1,18 @@
+# eclipse
+.project
+.classpath
+.settings
+.metadata
+target/
+aspect/
+# idea
+.idea
+*.iml
+*.iws
+*.ipr
+
+# java
+*.class
+
+**/src/generated/
+**/src/sun-jaxb.episode

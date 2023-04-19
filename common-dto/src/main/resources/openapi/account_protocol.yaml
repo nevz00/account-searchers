@@ -1,0 +1,135 @@
+# такая конфигурация корректна?
+openapi: 3.0.0
+externalDocs:
+  description: "Account page"
+  url: "https://wiki.corp.dev.vtb/pages/viewpage.action?pageId=102018533"
+info:
+  title: "Account OpenAPI definition"
+  version: 1.0.0
+tags:
+  - name: AccountController
+    description: Account
+paths:
+  /api/v1/web/account:
+    get:
+      tags:
+        - account
+      summary: Get Account
+      description: Getting accounts
+      operationId: getAccounts
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+  /api/v1/react-web/account:
+    get:
+      tags:
+        - account
+      summary: Get React Account
+      description: Getting accounts in reactive style
+      operationId: getAccounts
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+components:
+  schemas:
+#    Как сделать чтобы возвращался list accountDto
+    AccountResponse:
+      properties:
+        accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountDto'
+      required:
+        - accounts
+    AccountDto:
+      type: object
+      description: Account info dto
+      properties:
+        id:
+          type: integer
+          format: int64
+          description: Идентификатор счета
+        account_number:
+          type: string
+          description: Number of account
+          maxLength: 20
+        account_balance:
+          type: number
+          format: decimal
+          #must be a multiple of 0.01 (i.e. have two decimal places)
+          multipleOf: 0.01
+          description: Balance of account
+        currency:
+          type: string
+          description: Currency of account
+          maxLength: 3
+        last_oper_date:
+          type: string
+          format: date-time
+          description: Last operation date
+          example: '2020-01-01T12:34:56Z'
+    AccountErrorDto:
+      type: object
+      description: Error dto
+      properties:
+        error:
+          type: string
+          description: Error message
+  responses:
+    Created:
+      description: Resource created
+      headers:
+        location:
+          description: Location of created resource
+    NoContent:
+      description: Successful response without content
+    BadRequest:
+      description: Supplied request data are invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AccountErrorDto'
+    Unauthorized:
+      description: Access token is missing or invalid
+    Forbidden:
+      description: User is not granted sufficient privileges
+    NotFound:
+      description: Resource was not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AccountErrorDto'
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AccountErrorDto'

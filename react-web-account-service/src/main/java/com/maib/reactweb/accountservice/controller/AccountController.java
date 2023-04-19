@@ -1,0 +1,36 @@
+package com.maib.reactweb.accountservice.controller;
+
+import com.maib.account.ws.model.AccountResponse;
+import com.maib.reactweb.accountservice.services.AccountService;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
+
+/**
+ * REST controller for working with accounts
+ *
+ * @author nevzorov
+ *         19.04.2023 03:25
+ */
+@Slf4j
+@RestController
+@RequestMapping("/api/v1/react-web/account")
+@AllArgsConstructor
+public class AccountController {
+
+    /** Account Service */
+    private final AccountService accountService;
+
+    /**
+     * Get accounts
+     *
+     * @return list of accounts
+     */
+    @GetMapping
+    public Mono<AccountResponse> getAccounts() {
+        return accountService.getAccounts();
+    }
+}
